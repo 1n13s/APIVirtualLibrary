@@ -37,7 +37,7 @@ class BookManager:
             Args:
                 book_info(Dict[str,any]): The book data
         """
-        code=obtain_valid_code(book_info["title"][0].upper(),self.collection)
+        code=obtain_valid_code("B_",self.collection)
         query={
             "title":book_info["title"],
             "author":book_info["author"],

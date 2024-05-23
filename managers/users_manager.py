@@ -25,14 +25,11 @@ class UserManager:
             Returns:
                 Dict[str, str]: The message before the user addition
         """
-        #month=user_info["birth_month"]
-        #year=user_info["birth_year"]
-        #birth_date=(str(f"{year}-{month}-{day}"))
-
         role = "admin" if is_admin else "user"
+        code = obtain_valid_code("U_" if role=="user" else "A_",self.collection)
         query={
             "name": user_info["name"],
-            "code": obtain_valid_code(user_info["name"][0].upper(),self.collection),
+            "code": code,
             "age": user_info["age"],
             "birth_day": str(user_info["birth_date"]),
             "direction":user_info["direction"],

@@ -48,13 +48,13 @@ class AddUser(BaseModel):
         }
     @validator('birth_date')
     def inid_date_validation(cls, v):
-        if v < date.today():
-            raise ValueError('The date should be after today')
+        if v > date.today():
+            raise ValueError('The date should be before today')
         return v
 
 class AddBookLoan(BaseModel):
-    book_code:str = Field(min_length=8,max_length=8)
-    user_code:str = Field(min_length=8,max_length=8)
+    book_code:str = Field(min_length=8,max_length=10)
+    user_code:str = Field(min_length=8,max_length=10)
     init_date:date
     state:LoanState
 

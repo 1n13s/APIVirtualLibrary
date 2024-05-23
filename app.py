@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import FastAPI
+from starlette import status
 from database.database_connection import DatabaseConnection
 from managers.users_manager import UserManager
 from managers.books_manager import BookManager
@@ -13,16 +14,16 @@ BOOKS=BookManager(DATABASE.books_collection)
 
 app = FastAPI()
 
-@app.get("/")
+@app.get("/",status_code=status.HTTP_200_OK)
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/get_books")
+@app.get("/get_books",status_code=status.HTTP_200_OK)
 def get_books():
     """Gets all books"""
     return BOOKS.get_books()
 
-@app.post("/get-books_filtred")
+@app.post("/get-books_filtred",status_code=status.HTTP_200_OK)
 def get_books(filter_book:GetBookFiltred):
     """
         Gets books with a filter
@@ -30,21 +31,21 @@ def get_books(filter_book:GetBookFiltred):
     return BOOKS.get_books_filtred(dict(filter_book))
 
 
-@app.put("/add-book")
+@app.put("/add-book",status_code=status.HTTP_201_CREATED)
 def add_books(book: AddBook):
     """
         Adds a book
     """
     return BOOKS.add_book(dict(book))
 
-@app.put("/add-user")
+@app.put("/add-user",status_code=status.HTTP_201_CREATED)
 def add_user_endpoint(user: AddUser):
     """
         Adds an user
     """
     return USERS.add_user(dict(user),False)
 
-@app.put("/add-admin")
+@app.put("/add-admin",status_code=status.HTTP_201_CREATED)
 def add_admin_endpoint(user: AddUser):
     """
         Adds an admin

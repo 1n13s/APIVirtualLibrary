@@ -63,8 +63,8 @@ class AddBookLoan(BaseModel):
             'example':{
                 "book_code": "A12BC6DE",
                 "user_code": "EF12GHIJ",
-                "init_date": "2024-08-23",
-                "state":"Borrowed | On_hold | Returned | Renewed | Lost | Damaged"
+                "init_date": "2024-05-23",
+                "state":"Borrowed | Past | Returned | Renewed | Lost | Damaged"
             }
         }
 

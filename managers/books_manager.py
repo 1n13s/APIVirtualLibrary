@@ -51,7 +51,19 @@ class BookManager:
         new_values = {"$set": query}
         self.collection.update_one(query, new_values, upsert=True)
         return {"message": f"The book has been added successfully with the code {code}"}
+    
+    def valid_available_copies(self,code_book:str) -> bool:
+        """Validates if the book to loan has an available copy
 
+        Args:
+            code_book (str): The code of the book
+
+        Returns:
+            bool: Validation
+        """
+        book_filtred=self.get_books_filtred({"code":code_book})
+        book_info=book_filtred["books"]
+        return book_info[0]["available_copies"] > 0
 
 
 

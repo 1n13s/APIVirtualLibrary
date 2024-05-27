@@ -52,18 +52,36 @@ class BookManager:
         self.collection.update_one(query, new_values, upsert=True)
         return {"message": f"The book has been added successfully with the code {code}"}
     
-    def valid_available_copies(self,code_book:str) -> bool:
-        """Validates if the book to loan has an available copy
+    def obtain_available_copies(self,code_book:str)->int:
+        """Obtains the available copies of a book
 
         Args:
             code_book (str): The code of the book
 
         Returns:
-            bool: Validation
+            int: Number of available copies
         """
         book_filtred=self.get_books_filtred({"code":code_book})
         book_info=book_filtred["books"]
-        return book_info[0]["available_copies"] > 0
+        return book_info[0]["available_copies"]
+
+    def update_available_copies(self,code_book:str,return_book:bool) -> bool:
+        """Updates the available copies from a book
+
+        Args:
+            code_book (str): The code of the book
+            return_book (bool): Evaluates whether the available copy will be increased or not
+
+        Returns:
+            bool: Validation of the operation
+        """
+        available_copies_set=self.obtain_available_copies(code_book=code_book)
+        if return_book: available_copies_set+=1
+        else: available_copies_set-=1
+        try:
+            self.collection.update_one({"code":code_book},{"$set":{"available_copies":available_copies_set}})
+        except Exception as e:
+            raise ValueError(f"The book update has failed: {e}") from e
 
 
 

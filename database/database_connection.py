@@ -9,6 +9,6 @@ class DatabaseConnection:
         self.client = MongoClient(self.connection_string)
         self.data_base_name=self.client["library"]
         self.books_collection=self.data_base_name["books"]
-        self.book_loans_collection=self.data_base_name["book_oans"]
+        self.book_loans_collection=self.data_base_name["book_loans"]
         self.users_collection=self.data_base_name["users"]
         

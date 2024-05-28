@@ -1,5 +1,15 @@
-from pydantic import BaseModel,Field
+from pydantic import BaseModel,Field, validator
+from enum import Enum, IntEnum
 from typing import Optional
+from datetime import date
+
+class LoanState(str,Enum):
+    borrowed="Borrowed"
+    on_hold="On_hold"
+    returned="Returned"
+    renewed="Renewed"
+    lost="Lost"
+    damaged="Damaged"
 
 class AddBook(BaseModel):
     title: str = Field(min_length=1)
@@ -25,22 +35,36 @@ class AddBook(BaseModel):
 class AddUser(BaseModel):
     name:str = Field(min_length=1)
     age:int = Field(gt=5)
-    birth_day:int = Field(ge=1,le=31)
-    birth_month:int = Field(ge=1,le=12)
-    birth_year:int = Field(ge=1900,le=2024)
+    birth_date:date
     direction:str = Field(min_length=1)
     class Config:
         schema_extra = {
             'example':{
                 "name": "Ivonne",
                 "age": 23,
-                "birth_day": 28,
-                "birth_month": 12,
-                "birth_year": 2000,
+                "birth_date": "2024-05-12",
                 "direction": "Street Blue #1"
             }
         }
+    @validator('birth_date')
+    def inid_date_validation(cls, v):
+        if v > date.today():
+            raise ValueError('The date should be before today')
+        return v
 
+class AddBookLoan(BaseModel):
+    book_code:str = Field(min_length=8,max_length=10)
+    user_code:str = Field(min_length=8,max_length=10)
+    state:LoanState
+
+    class Config:
+        schema_extra={
+            'example':{
+                "book_code": "A12BC6DE",
+                "user_code": "EF12GHIJ",
+                "state":"Borrowed | Past | Returned | Renewed | Lost | Damaged"
+            }
+        }
 
 class GetBookFiltred(BaseModel):
     title: Optional[str] = Field(min_length=1)
@@ -51,3 +75,6 @@ class GetBookFiltred(BaseModel):
     num_copies: Optional[int] = Field(gt=0)
     available_copies: Optional[int] = Field(gt=0)
     code: Optional[str] = Field(min_length=1)
+
+class ReturnBook(BaseModel):
+    code_loan:str=Field(min_length=8,max_length=10)

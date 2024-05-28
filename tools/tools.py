@@ -27,10 +27,9 @@ def obtain_query(data_query:Dict[str,any]) -> Dict[str,any]:
         query={}
         for key in keys:
             if data_query[key] is not None:
-                item=data_query[key]
-                print(item)
                 query |= {key:{"$regex":data_query[key]}}
         return query
+
 
 """
 def obtain_pages() :

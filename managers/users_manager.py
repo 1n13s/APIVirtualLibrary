@@ -42,3 +42,16 @@ class UserManager:
             raise f"The instert user has failed {e}" from e
         return {"message": f"{role} added successfully"}
 
+    def validation_existing_code(self, user_code:str)->bool:
+        """Validates if the user code exists
+
+        Args:
+            code_book (str): The code of the book
+
+        Returns:
+            bool: Validation of the operation
+        """
+        query={"code":user_code}
+        user=list(self.collection.find(query))
+        return bool(len(user))    
+

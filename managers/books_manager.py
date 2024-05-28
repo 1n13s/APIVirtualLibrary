@@ -83,6 +83,18 @@ class BookManager:
         except Exception as e:
             raise ValueError(f"The book update has failed: {e}") from e
 
+    def validation_existing_code(self, book_code:str)->bool:
+        """Validates if the book code exists
+
+        Args:
+            code_book (str): The code of the book
+
+        Returns:
+            bool: Validation of the operation
+        """
+        query={"code":book_code}
+        book=list(self.collection.find(query))
+        return bool(len(book))    
 
     """def correction_code(self,books_dic):
             book_list=books_dic["books"]

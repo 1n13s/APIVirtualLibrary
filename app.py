@@ -65,7 +65,14 @@ def loan_request(loan: AddBookLoan):
     Returns:
         _type_: _description_
     """
-    return LOANS.add_book_loan(dict(loan),BOOKS)
+    loan_info=dict(loan)
+    user_code_exist=USERS.validation_existing_code(loan_info["user_code"])
+    book_code_exist=BOOKS.validation_existing_code(loan_info["book_code"])
+    if user_code_exist and book_code_exist:
+        return LOANS.add_book_loan(dict(loan),BOOKS)
+    book_code_message= ("" if book_code_exist else f'The book code {loan_info["book_code"]} has not exist')
+    user_code_message = ("" if user_code_exist else f'The user code {loan_info["user_code"]} has not exist')
+    return {"message":f"{user_code_message} {book_code_message}"}
 
 @app.post("/return-request")
 def return_request(code: str):

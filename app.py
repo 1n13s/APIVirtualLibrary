@@ -75,9 +75,9 @@ def loan_request(loan: AddBookLoan):
     return {"message":f"{user_code_message} {book_code_message}"}
 
 @app.post("/return-request")
-def return_request(code: str):
+def return_request(return_book: ReturnBook):
     # Implement logic for return request
-    return LOANS.return_book(code,BOOKS)
+    return LOANS.return_book(dict(return_book),BOOKS)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)

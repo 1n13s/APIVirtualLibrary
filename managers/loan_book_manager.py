@@ -28,12 +28,17 @@ class LoanBookManager:
         if book_manager.obtain_available_copies(book_loan_info["book_code"])>0:
             book_code=book_loan_info["book_code"]
             code=obtain_valid_code("L_",self.collection)
-            finish_date=str(book_loan_info["init_date"]+timedelta(days=5))
+            init_date=datetime.now()
+            #.strftime('%Y-%m-%d %H:%M:%S')
+            #finish_date=(datetime.now().strftime('%Y-%m-%d'))+timedelta(days=5)
+            #(book_loan_info["init_date"]+timedelta(days=5))
+            finish_date=init_date+timedelta(days=5)
+
             query={
                 "book_code":book_loan_info["book_code"],
                 "user_code":book_loan_info["user_code"],
-                "init_date":str(book_loan_info["init_date"]),
-                "finish_date":finish_date,
+                "init_date":init_date.strftime('%Y-%m-%d %H:%M:%S'),
+                "finish_date":finish_date.strftime('%Y-%m-%d'),
                 "code":code,
                 "state":book_loan_info["state"]
             }
@@ -59,11 +64,11 @@ class LoanBookManager:
         Returns:
             bool: Validation of the operation
         """
-        update = {"state": "Returned", "return_date": str(datetime.now())}
+        update = {"state": "Returned", "return_date": str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}
         self.collection.update_one({"code":code_loan},{"$set":update})
         return True
 
-    def return_book(self,code_loan:str,book_manager:BookManager) -> Dict[str,str]:
+    def return_book(self,return_info:dict,book_manager:BookManager) -> Dict[str,str]:
         """Updates the state of loan books
 
         Args:
@@ -72,6 +77,7 @@ class LoanBookManager:
         Returns:
             Dict[str,str]: Message of the operation
         """
+        code_loan=return_info["code_loan"]
         self.update_loan_book(code_loan=code_loan)
         book_loan_list=self.filtred_loan(code=code_loan)
         book_manager.update_available_copies(code_book=book_loan_list[0]["book_code"],return_book=True)

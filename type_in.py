@@ -55,7 +55,6 @@ class AddUser(BaseModel):
 class AddBookLoan(BaseModel):
     book_code:str = Field(min_length=8,max_length=10)
     user_code:str = Field(min_length=8,max_length=10)
-    init_date:date
     state:LoanState
 
     class Config:
@@ -63,16 +62,9 @@ class AddBookLoan(BaseModel):
             'example':{
                 "book_code": "A12BC6DE",
                 "user_code": "EF12GHIJ",
-                "init_date": "2024-05-23",
                 "state":"Borrowed | Past | Returned | Renewed | Lost | Damaged"
             }
         }
-
-    @validator('init_date')
-    def inid_date_validation(cls, v):
-        if v < date.today():
-            raise ValueError('The date should be after today')
-        return v
 
 class GetBookFiltred(BaseModel):
     title: Optional[str] = Field(min_length=1)
@@ -86,4 +78,3 @@ class GetBookFiltred(BaseModel):
 
 class ReturnBook(BaseModel):
     code_loan:str=Field(min_length=8,max_length=10)
-    

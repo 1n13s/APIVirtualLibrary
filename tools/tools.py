@@ -30,6 +30,7 @@ def obtain_query(data_query:Dict[str,any]) -> Dict[str,any]:
                 query |= {key:{"$regex":data_query[key]}}
         return query
 
+
 """
 def obtain_pages() :
     return random.randint(50, 350)

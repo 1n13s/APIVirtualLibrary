@@ -84,5 +84,25 @@ class BookManager:
             raise ValueError(f"The book update has failed: {e}") from e
 
 
+    """def correction_code(self,books_dic):
+            book_list=books_dic["books"]
+            for book_info in book_list:
+                #query={"title":book_info["title"]}
+                #set_={"num_pages":obtain_pages(),"code":obtain_valid_code(book_info["title"][0].upper(),self.books_collection)}
+                self.collection.update_one(
+                    {
+                        "code":book_info["code"]
+                    },
+                    {
+                        "$set":
+                            {
+                                "code":obtain_valid_code(
+                                    "B_",
+                                    self.collection
+                                    )
+                            }
+                    }
+                )"""
+
 
 

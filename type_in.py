@@ -83,3 +83,7 @@ class GetBookFiltred(BaseModel):
     num_copies: Optional[int] = Field(gt=0)
     available_copies: Optional[int] = Field(gt=0)
     code: Optional[str] = Field(min_length=1)
+
+class ReturnBook(BaseModel):
+    code_loan:str=Field(min_length=8,max_length=10)
+    

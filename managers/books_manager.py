@@ -19,7 +19,11 @@ class BookManager:
         """
             Provides all the books in the Mongo Database
         """
-        return {"books":list(self.collection.find({},{"_id":0}))}
+        try:
+            return {"books":list(self.collection.find({},{"_id":0}))}
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Get books failed: {err}") from err
     
     def get_books_filtred(self,book_queries:Dict[str,any]) -> Dict[str,List[Dict[str,any]]]:
         """
@@ -28,8 +32,12 @@ class BookManager:
                 book_queries(Dict[str,any]): The filter data
         """
         query=obtain_query(book_queries)
-        return{"books":(list(self.collection.find(query,{"_id":0})))}
-           
+        try:
+            return{"books":(list(self.collection.find(query,{"_id":0})))}
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Get books failed: {err}") from err
+    
     def add_book(self,book_info: Dict[str,any]) -> Dict[str,str]:
         """
             Adds a book in the MongoDB
@@ -49,9 +57,13 @@ class BookManager:
             "code":code
         }
         new_values = {"$set": query}
-        self.collection.update_one(query, new_values, upsert=True)
-        return {"message": f"The book has been added successfully with the code {code}"}
-    
+        try:
+            self.collection.update_one(query, new_values, upsert=True)
+            return {"message": f"The book has been added successfully with the code {code}"}
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Add book failed: {err}") from err
+        
     def obtain_available_copies(self,code_book:str)->int:
         """Obtains the available copies of a book
 
@@ -61,9 +73,13 @@ class BookManager:
         Returns:
             int: Number of available copies
         """
-        book_filtred=self.get_books_filtred({"code":code_book})
-        book_info=book_filtred["books"]
-        return book_info[0]["available_copies"]
+        try:
+            book_filtred=self.get_books_filtred({"code":code_book})
+            book_info=book_filtred["books"]
+            return book_info[0]["available_copies"]
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Obtain available copies book failed: {err}") from err
 
     def update_available_copies(self,code_book:str,return_book:bool) -> bool:
         """Updates the available copies from a book
@@ -92,9 +108,13 @@ class BookManager:
         Returns:
             bool: Validation of the operation
         """
-        query={"code":book_code}
-        book=list(self.collection.find(query))
-        return bool(len(book))    
+        try:
+            query={"code":book_code}
+            book=list(self.collection.find(query))
+            return bool(len(book))
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Validate existing code failed: {err}") from err
 
     """def correction_code(self,books_dic):
             book_list=books_dic["books"]

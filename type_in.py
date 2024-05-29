@@ -60,8 +60,8 @@ class AddBookLoan(BaseModel):
     class Config:
         schema_extra={
             'example':{
-                "book_code": "A12BC6DE",
-                "user_code": "EF12GHIJ",
+                "book_code": "B_A12BC6DE",
+                "user_code": "U_EF12GHIJ",
                 "state":"Borrowed | Past | Returned | Renewed | Lost | Damaged"
             }
         }

@@ -51,7 +51,11 @@ class UserManager:
         Returns:
             bool: Validation of the operation
         """
-        query={"code":user_code}
-        user=list(self.collection.find(query))
-        return bool(len(user))    
+        try:
+            query={"code":user_code}
+            user=list(self.collection.find(query))
+            return bool(len(user))
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Validation existing code failed: {err}") from err  
 

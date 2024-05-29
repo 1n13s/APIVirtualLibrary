@@ -4,18 +4,26 @@ import string
 
 
 def obtain_valid_code(first_letter:str,collection:any) -> str:
-    code_repeated=True
-    while code_repeated:
-        code=first_letter+generate_code(7)
-        if not validate_code(code,collection): code_repeated=False
-    return code
+    try:
+        code_repeated=True
+        while code_repeated:
+            code=first_letter+generate_code(7)
+            if not validate_code(code,collection): code_repeated=False
+        return code
+    except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Obtain valid code failed: {err}") from err
 
 def generate_code(large:int) -> str:
-    chars = string.ascii_letters.upper() + string.digits
-    return ''.join(random.choice(chars) for _ in range(large))
+    try:
+        chars = string.ascii_letters.upper() + string.digits
+        return ''.join(random.choice(chars) for _ in range(large))
+    except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Generate code failed: {err}") from err
 
 def validate_code(code:str,collection:any) -> bool:
-        return bool(list(collection.find({"code": code})))
+    return bool(list(collection.find({"code": code})))
 
 def obtain_query(data_query:Dict[str,any]) -> Dict[str,any]:
         """
@@ -23,12 +31,16 @@ def obtain_query(data_query:Dict[str,any]) -> Dict[str,any]:
             Args:
                 book_queries(Dict[str,any]): The filter data
         """
-        keys=data_query.keys()
-        query={}
-        for key in keys:
-            if data_query[key] is not None:
-                query |= {key:{"$regex":data_query[key]}}
-        return query
+        try:
+            keys=data_query.keys()
+            query={}
+            for key in keys:
+                if data_query[key] is not None:
+                    query |= {key:{"$regex":data_query[key]}}
+            return query
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Obtain query failed: {err}") from err
 
 
 """

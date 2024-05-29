@@ -64,9 +64,13 @@ class LoanBookManager:
         Returns:
             bool: Validation of the operation
         """
-        update = {"state": "Returned", "return_date": str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}
-        self.collection.update_one({"code":code_loan},{"$set":update})
-        return True
+        try:
+            update = {"state": "Returned", "return_date": str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}
+            self.collection.update_one({"code":code_loan},{"$set":update})
+            return True
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"Update loan book failed: {err}") from err
 
     def return_book(self,return_info:dict,book_manager:BookManager) -> Dict[str,str]:
         """Updates the state of loan books
@@ -77,8 +81,12 @@ class LoanBookManager:
         Returns:
             Dict[str,str]: Message of the operation
         """
-        code_loan=return_info["code_loan"]
-        self.update_loan_book(code_loan=code_loan)
-        book_loan_list=self.filtred_loan(code=code_loan)
-        book_manager.update_available_copies(code_book=book_loan_list[0]["book_code"],return_book=True)
-        return {"message": "The book has been returned successfully"}
+        try:
+            code_loan=return_info["code_loan"]
+            self.update_loan_book(code_loan=code_loan)
+            book_loan_list=self.filtred_loan(code=code_loan)
+            book_manager.update_available_copies(code_book=book_loan_list[0]["book_code"],return_book=True)
+            return {"message": "The book has been returned successfully"}
+        except Exception as err:
+            # sourcery skip: raise-specific-error
+            raise Exception(f"The return book has failed: {err}") from err
